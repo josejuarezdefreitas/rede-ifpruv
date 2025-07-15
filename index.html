@@ -6,80 +6,42 @@
     <title> INSTITUTO FEDERAL DO PARANÁ - União da Vitória </title>
     <style>
         :root {
-            --bg-start: #667eea;
-            --bg-end: #764ba2;
-            --container-bg: #ffffff;
-            --diagram-bg: #f0f2f5;
-            --diagram-border: #dee2e6;
-            --text-color: #333;
-            --selection-color: #3498db;
-            --connection-color: #34495e;
-            --connection-highlight: #ff8c00;
-            --danger-color: #e74c3c;
+            --bg-start: #667eea; --bg-end: #764ba2; --container-bg: #ffffff;
+            --diagram-bg: #f0f2f5; --diagram-border: #dee2e6; --text-color: #333;
+            --selection-color: #3498db; --connection-color: #34495e;
+            --connection-highlight: #ff8c00; --danger-color: #e74c3c;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
-            min-height: 100vh;
-            display: flex; flex-direction: column; align-items: center;
+            font-family: 'Arial', sans-serif; background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            min-height: 100vh; display: flex; flex-direction: column; align-items: center;
             padding: 20px; color: var(--text-color);
         }
-
         .header { text-align: center; color: white; margin-bottom: 20px; }
         .header h1 { font-size: 2.2rem; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-
         .network-container {
-            background: var(--container-bg);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-            max-width: 1400px;
-            width: 100%;
+            background: var(--container-bg); border-radius: 20px; padding: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15); max-width: 1400px; width: 100%;
         }
-
         .network-diagram {
-            position: relative;
-            height: 650px;
-            background-color: var(--diagram-bg);
-            border: 1px solid var(--diagram-border);
-            border-radius: 15px;
-            overflow: hidden;
-            cursor: default;
+            position: relative; height: 650px; background-color: var(--diagram-bg);
+            border: 1px solid var(--diagram-border); border-radius: 15px; overflow: hidden; cursor: default;
         }
         .network-diagram.panning { cursor: grab; }
         .network-diagram.panning:active { cursor: grabbing; }
-        
         #canvas {
-            position: absolute;
-            width: 4000px; height: 3000px;
-            background-color: var(--diagram-bg);
-            background-image:
-                linear-gradient(rgba(0,0,0,0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,0,0,0.08) 1px, transparent 1px);
-            background-size: 20px 20px;
-            transform-origin: 0 0;
-            transition: transform 0.1s ease-out;
+            position: absolute; width: 4000px; height: 3000px; background-color: var(--diagram-bg);
+            background-image: linear-gradient(rgba(0,0,0,0.08) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0,0,0,0.08) 1px, transparent 1px);
+            background-size: 20px 20px; transform-origin: 0 0; transition: transform 0.1s ease-out;
         }
-
         #connections-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
         .connection-line { stroke: var(--connection-color); stroke-width: 3; }
-
         .network-device {
-            position: absolute;
-            background: var(--container-bg);
-            border: 3px solid #ccc;
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-            min-width: 160px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: box-shadow 0.2s ease, outline 0.1s ease;
-            cursor: move;
-            user-select: none;
-            z-index: 10;
+            position: absolute; background: var(--container-bg); border: 3px solid #ccc;
+            border-radius: 12px; padding: 12px; text-align: center; min-width: 160px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: box-shadow 0.2s ease, outline 0.1s ease;
+            cursor: move; user-select: none; z-index: 10;
         }
         .network-device.selected { outline: 3px solid var(--selection-color); outline-offset: 2px; }
         .network-device.connection-start { outline: 3px solid var(--connection-highlight); outline-offset: 2px; }
@@ -89,8 +51,6 @@
         .device-ip { font-family: 'Courier New', monospace; font-size: 0.85rem; background-color: #eee; padding: 2px 5px; border-radius: 4px; margin-bottom: 5px; }
         .device-info { font-size: 0.75rem; color: #666; }
         .device-website-link { position: absolute; top: 5px; right: 8px; font-size: 1.2rem; text-decoration: none; z-index: 11; }
-        
-        /* Cores dinâmicas para tipos padrão */
         .router .device-name { color: #e67e22; } .router { border-color: #e67e22; }
         .switch .device-name { color: #9b59b6; } .switch { border-color: #9b59b6; }
         .server .device-name { color: #c0392b; } .server { border-color: #c0392b; }
@@ -102,7 +62,6 @@
         .nvr .device-name { color: #2980b9; } .nvr { border-color: #2980b9; }
         .camera .device-name { color: #555555; } .camera { border-color: #555555; }
         .tv .device-name { color: #f39c12; } .tv { border-color: #f39c12; }
-
         .view-controls {
             position: absolute; bottom: 15px; right: 15px; z-index: 100;
             background: rgba(255, 255, 255, 0.9); border-radius: 8px;
@@ -112,17 +71,14 @@
         .view-controls button:first-child { border-left: none; }
         .view-controls button:hover { background: #eee; }
         .view-controls span { padding: 10px 12px; font-size: 0.9rem; font-weight: bold; border-left: 1px solid #ddd; color: #555; display: flex; align-items: center; }
-
         .control-panel { margin-top: 20px; background: #f8f9fa; border-radius: 10px; padding: 20px; }
         .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .control-buttons button { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; transition: opacity 0.2s; margin-left: 10px; }
         #btn-import, #btn-export { background-color: var(--selection-color); }
         #btn-clear { background-color: var(--danger-color); }
         .device-templates {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px; margin-bottom: 20px;
         }
         .template-item { background: white; border: 2px dashed var(--diagram-border); border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
         .instructions { margin-top: 15px; background: #e8f4fd; border-left: 4px solid var(--selection-color); padding: 15px; border-radius: 5px; }
@@ -133,7 +89,6 @@
         <h1>🏛️ INSTITUTO FEDERAL DO PARANÁ - União da Vitória</h1>
         <p>Layout de rede</p>
     </div>
-
     <div class="network-container">
         <div class="network-diagram" id="networkDiagram">
             <div id="canvas">
@@ -147,7 +102,6 @@
                 <span id="zoom-level">100%</span>
             </div>
         </div>
-
         <div class="control-panel">
              <div class="panel-header">
                 <h3>🔧 Dispositivos</h3>
@@ -158,18 +112,19 @@
                     <input type="file" id="import-file" accept=".json" style="display: none;">
                 </div>
             </div>
+            <!-- **** ALTERAÇÃO AQUI: Removido 'onclick' e adicionado 'id' **** -->
             <div class="device-templates">
-                 <div class="template-item" onclick="addDevice('router')"><div>📡</div><div>Router</div></div>
-                 <div class="template-item" onclick="addDevice('switch')"><div>🔀</div><div>Switch</div></div>
-                 <div class="template-item" onclick="addDevice('server')"><div>🖥️</div><div>Servidor</div></div>
-                 <div class="template-item" onclick="addDevice('firewall')"><div>🔥</div><div>Firewall</div></div>
-                 <div class="template-item" onclick="addDevice('endpoint')"><div>💻</div><div>Endpoint</div></div>
-                 <div class="template-item" onclick="addDevice('printer')"><div>🖨️</div><div>Impressora</div></div>
-                 <div class="template-item" onclick="addDevice('printer3d')"><div>🧊</div><div>Impressora 3D</div></div>
-                 <div class="template-item" onclick="addDevice('nvr')"><div>📹</div><div>NVR</div></div>
-                 <div class="template-item" onclick="addDevice('camera')"><div>📷</div><div>Câmera</div></div>
-                 <div class="template-item" onclick="addDevice('tv')"><div>📺</div><div>TV</div></div>
-                 <div class="template-item" onclick="addCustomDevice()"><div>➕</div><div>Personalizado</div></div>
+                 <div id="add-router" class="template-item"><div>📡</div><div>Router</div></div>
+                 <div id="add-switch" class="template-item"><div>🔀</div><div>Switch</div></div>
+                 <div id="add-server" class="template-item"><div>🖥️</div><div>Servidor</div></div>
+                 <div id="add-firewall" class="template-item"><div>🔥</div><div>Firewall</div></div>
+                 <div id="add-endpoint" class="template-item"><div>💻</div><div>Endpoint</div></div>
+                 <div id="add-printer" class="template-item"><div>🖨️</div><div>Impressora</div></div>
+                 <div id="add-printer3d" class="template-item"><div>🧊</div><div>Impressora 3D</div></div>
+                 <div id="add-nvr" class="template-item"><div>📹</div><div>NVR</div></div>
+                 <div id="add-camera" class="template-item"><div>📷</div><div>Câmera</div></div>
+                 <div id="add-tv" class="template-item"><div>📺</div><div>TV</div></div>
+                 <div id="add-custom" class="template-item"><div>➕</div><div>Personalizado</div></div>
             </div>
              <div class="instructions">
                 <h4>📋 Como usar:</h4>
@@ -182,199 +137,189 @@
         </div>
     </div>
 
-    <script type="module"> // <-- MUITO IMPORTANTE: adicione type="module"
-    // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyD3RE7LkoErW-NUWIWEeLUphLfzcHwR_CM",
-  authDomain: "rede-ifpruv-6d8ad.firebaseapp.com",
-  projectId: "rede-ifpruv-6d8ad",
-  storageBucket: "rede-ifpruv-6d8ad.firebasestorage.app",
-  messagingSenderId: "353838081636",
-  appId: "1:353838081636:web:38709b142649ec6abc2171"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-    const diagramStateRef = ref(database, 'diagramState'); // Referência para onde salvaremos os dados
-
-    // --- O RESTANTE DO SEU CÓDIGO, COM MODIFICAÇÕES ---
-
-    const diagram = document.getElementById('networkDiagram');
-    const canvas = document.getElementById('canvas');
-    const connectionsSvg = document.getElementById('connections-svg');
-    const svgNS = "http://www.w3.org/2000/svg";
-
-    let devices = [];
-    let connections = [];
-    let selectedDeviceIds = [];
-    let connectionStartId = null;
-    let scale = 1.0, panX = 0, panY = 0;
-    let isPanning = false, isSpacebarDown = false;
-
-    const deviceIcons = {
-        router: '📡', switch: '🔀', server: '🖥️', firewall: '🔥',
-        endpoint: '💻', opnsense: '🛡️', printer: '🖨️', printer3d: '🧊',
-        nvr: '📹', camera: '📷', tv: '📺'
-    };
-
-    // --- Renderização e Manipulação do DOM (sem alterações ) ---
-    function render() {
-        canvas.querySelectorAll('.network-device').forEach(el => el.remove());
-        connectionsSvg.innerHTML = '';
-        
-        devices.forEach(device => {
-            const deviceEl = document.createElement('div');
-            const typeClass = device.isCustom 
-                ? `custom-${device.type.toLowerCase().replace(/\s+/g, '-')}` 
-                : device.type;
-            deviceEl.className = `network-device ${typeClass}`;
-            deviceEl.id = device.id;
-            deviceEl.style.left = `${device.x}px`; deviceEl.style.top = `${device.y}px`;
-
-            if (device.isCustom && device.customColor) {
-                deviceEl.style.borderColor = device.customColor;
-            }
-
-            const icon = device.isCustom ? device.customIcon : (deviceIcons[device.type] || '❓');
-            const photoHtml = device.photoUrl ? `<img src="${device.photoUrl}" class="device-photo" alt="${device.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><div class="device-icon" style="display:none;">${icon}</div>` : `<div class="device-icon">${icon}</div>`;
-            const websiteLinkHtml = device.websiteUrl ? `<a href="${device.websiteUrl}" target="_blank" class="device-website-link" onclick="event.stopPropagation()">🔗</a>` : '';
-            
-            deviceEl.innerHTML = `${websiteLinkHtml}${photoHtml}<div class="device-name">${device.name}</div><div class="device-ip">${device.ip}</div><div class="device-info">${device.info}</div>`;
-            
-            if (device.isCustom && device.customColor) {
-                deviceEl.querySelector('.device-name').style.color = device.customColor;
-            }
-
-            addDeviceEvents(deviceEl);
-            canvas.appendChild(deviceEl);
-        });
-
-        updateSelectionVisuals();
-
-        connections.forEach(conn => {
-            const fromEl = document.getElementById(conn.from); const toEl = document.getElementById(conn.to);
-            if (fromEl && toEl) {
-                const getCenter = (el) => ({ x: el.offsetLeft + el.offsetWidth / 2, y: el.offsetTop + el.offsetHeight / 2 });
-                const start = getCenter(fromEl); const end = getCenter(toEl);
-                const line = document.createElementNS(svgNS, 'line');
-                line.setAttribute('x1', start.x); line.setAttribute('y1', start.y);
-                line.setAttribute('x2', end.x); line.setAttribute('y2', end.y);
-                line.setAttribute('class', 'connection-line');
-                connectionsSvg.appendChild(line);
-            }
-        });
-    }
-    
-    // --- Funções de Lógica da Aplicação ---
-    function addDevice(type) {
-        const diagramRect = diagram.getBoundingClientRect();
-        const centerXInView = (diagramRect.width / 2) - panX; const centerYInView = (diagramRect.height / 2) - panY;
-        const newDevice = {
-            id: `${type}-${Date.now()}`, type,
-            x: (centerXInView / scale) - 80, y: (centerYInView / scale) - 60,
-            name: `${type.charAt(0).toUpperCase() + type.slice(1)}`, ip: '192.168.1.1', info: `Novo dispositivo`, photoUrl: '', websiteUrl: '',
-            isCustom: false
+        const firebaseConfig = {
+            apiKey: "AIzaSyD3RE7LkoErW-NUWIWEeLUphLfzcHwR_CM",
+            authDomain: "rede-ifpruv-6d8ad.firebaseapp.com",
+            databaseURL: "https://rede-ifpruv-6d8ad-default-rtdb.firebaseio.com",
+            projectId: "rede-ifpruv-6d8ad",
+            storageBucket: "rede-ifpruv-6d8ad.appspot.com",
+            messagingSenderId: "353838081636",
+            appId: "1:353838081636:web:38709b142649ec6abc2171"
         };
-        devices.push(newDevice); saveState(); render();
-    }
 
-    function addCustomDevice() {
-        const typeName = prompt("Qual o nome do novo tipo de equipamento?", "Access Point");
-        if (!typeName) return;
-        const icon = prompt("Insira um ícone para este tipo (ex: 📶, 🖨️):", "✨");
-        if (!icon) return;
-        const color = prompt("Insira uma cor para a borda (formato hexadecimal):", "#00bcd4");
-        if (!color) return;
+        const app = initializeApp(firebaseConfig );
+        const database = getDatabase(app);
+        const diagramStateRef = ref(database, 'diagramState');
 
-        const diagramRect = diagram.getBoundingClientRect();
-        const centerXInView = (diagramRect.width / 2) - panX; const centerYInView = (diagramRect.height / 2) - panY;
-        
-        const newDevice = {
-            id: `${typeName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`,
-            type: typeName,
-            x: (centerXInView / scale) - 80, y: (centerYInView / scale) - 60,
-            name: typeName, ip: '10.0.0.1', info: `Dispositivo personalizado`, photoUrl: '', websiteUrl: '',
-            isCustom: true, customIcon: icon, customColor: color
+        const diagram = document.getElementById('networkDiagram');
+        const canvas = document.getElementById('canvas');
+        const connectionsSvg = document.getElementById('connections-svg');
+        const svgNS = "http://www.w3.org/2000/svg";
+
+        let devices = [];
+        let connections = [];
+        let selectedDeviceIds = [];
+        let connectionStartId = null;
+        let scale = 1.0, panX = 0, panY = 0;
+        let isPanning = false, isSpacebarDown = false;
+
+        const deviceIcons = {
+            router: '📡', switch: '🔀', server: '🖥️', firewall: '🔥',
+            endpoint: '💻', opnsense: '🛡️', printer: '🖨️', printer3d: '🧊',
+            nvr: '📹', camera: '📷', tv: '📺'
         };
-        devices.push(newDevice); saveState(); render();
-    }
 
-    // --- Funções de Zoom, Pan, Estado, Eventos, etc. ---
-    
-    // *** MODIFICAÇÃO PRINCIPAL: Funções de salvar e carregar ***
-    function saveState() {
-        // Agora, em vez de salvar no localStorage, envia para o Firebase
-        set(diagramStateRef, {
-            devices: devices,
-            connections: connections
+        function render( ) {
+            if (!canvas || !connectionsSvg) return;
+            canvas.querySelectorAll('.network-device').forEach(el => el.remove());
+            connectionsSvg.innerHTML = '';
+            (devices || []).forEach(device => {
+                const deviceEl = document.createElement('div');
+                const typeClass = device.isCustom ? `custom-${device.type.toLowerCase().replace(/\s+/g, '-')}` : device.type;
+                deviceEl.className = `network-device ${typeClass}`;
+                deviceEl.id = device.id;
+                deviceEl.style.left = `${device.x}px`; deviceEl.style.top = `${device.y}px`;
+                if (device.isCustom && device.customColor) { deviceEl.style.borderColor = device.customColor; }
+                const icon = device.isCustom ? device.customIcon : (deviceIcons[device.type] || '❓');
+                const photoHtml = device.photoUrl ? `<img src="${device.photoUrl}" class="device-photo" alt="${device.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><div class="device-icon" style="display:none;">${icon}</div>` : `<div class="device-icon">${icon}</div>`;
+                const websiteLinkHtml = device.websiteUrl ? `<a href="${device.websiteUrl}" target="_blank" class="device-website-link" onclick="event.stopPropagation()">🔗</a>` : '';
+                deviceEl.innerHTML = `${websiteLinkHtml}${photoHtml}<div class="device-name">${device.name}</div><div class="device-ip">${device.ip}</div><div class="device-info">${device.info}</div>`;
+                if (device.isCustom && device.customColor) { deviceEl.querySelector('.device-name').style.color = device.customColor; }
+                addDeviceEvents(deviceEl);
+                canvas.appendChild(deviceEl);
+            });
+            updateSelectionVisuals();
+            (connections || []).forEach(conn => {
+                if (!conn || !conn.from || !conn.to) return;
+                const fromEl = document.getElementById(conn.from); const toEl = document.getElementById(conn.to);
+                if (fromEl && toEl) {
+                    const getCenter = (el) => ({ x: el.offsetLeft + el.offsetWidth / 2, y: el.offsetTop + el.offsetHeight / 2 });
+                    const start = getCenter(fromEl); const end = getCenter(toEl);
+                    const line = document.createElementNS(svgNS, 'line');
+                    line.setAttribute('x1', start.x); line.setAttribute('y1', start.y);
+                    line.setAttribute('x2', end.x); line.setAttribute('y2', end.y);
+                    line.setAttribute('class', 'connection-line');
+                    connectionsSvg.appendChild(line);
+                }
+            });
+        }
+        
+        function addDevice(type) {
+            const diagramRect = diagram.getBoundingClientRect();
+            const centerXInView = (diagramRect.width / 2) - panX; const centerYInView = (diagramRect.height / 2) - panY;
+            const newDevice = {
+                id: `${type}-${Date.now()}`, type,
+                x: (centerXInView / scale) - 80, y: (centerYInView / scale) - 60,
+                name: `${type.charAt(0).toUpperCase() + type.slice(1)}`, ip: '192.168.1.1', info: `Novo dispositivo`, photoUrl: '', websiteUrl: '',
+                isCustom: false
+            };
+            if (!devices) devices = [];
+            devices.push(newDevice);
+            saveState();
+        }
+
+        function addCustomDevice() {
+            const typeName = prompt("Qual o nome do novo tipo de equipamento?", "Access Point");
+            if (!typeName) return;
+            const icon = prompt("Insira um ícone para este tipo (ex: 📶, 🖨️):", "✨");
+            if (!icon) return;
+            const color = prompt("Insira uma cor para a borda (formato hexadecimal):", "#00bcd4");
+            if (!color) return;
+            const diagramRect = diagram.getBoundingClientRect();
+            const centerXInView = (diagramRect.width / 2) - panX; const centerYInView = (diagramRect.height / 2) - panY;
+            const newDevice = {
+                id: `${typeName.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}`, type: typeName,
+                x: (centerXInView / scale) - 80, y: (centerYInView / scale) - 60,
+                name: typeName, ip: '10.0.0.1', info: `Dispositivo personalizado`, photoUrl: '', websiteUrl: '',
+                isCustom: true, customIcon: icon, customColor: color
+            };
+            if (!devices) devices = [];
+            devices.push(newDevice);
+            saveState();
+        }
+
+        function saveState() {
+            set(diagramStateRef, {
+                devices: devices || [],
+                connections: connections || []
+            });
+        }
+
+        function loadState() {
+            onValue(diagramStateRef, (snapshot) => {
+                const state = snapshot.val();
+                if (state) {
+                    devices = state.devices || [];
+                    connections = state.connections || [];
+                } else {
+                    initializeDefaultState();
+                    saveState();
+                }
+                render();
+            }, (error) => {
+                console.error("Erro ao carregar dados do Firebase:", error);
+                alert("Não foi possível conectar ao banco de dados. Verifique a configuração do Firebase e as regras de segurança.");
+            });
+        }
+
+        function initializeDefaultState() {
+            devices = [{ id: 'opnsense-main', type: 'opnsense', x: 2000, y: 1500, name: 'OPNsense', ip: '---', info: 'Firewall', photoUrl: '', websiteUrl: 'https://opnsense.org/', isCustom: false }];
+            connections = [];
+            fitView( );
+        }
+
+        function applyViewTransform() { if(canvas) { canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`; } if(document.getElementById('zoom-level')) { document.getElementById('zoom-level').textContent = `${Math.round(scale * 100)}%`; } }
+        function zoom(delta, mouseX, mouseY) { const oldScale = scale; const newScale = Math.max(0.2, Math.min(2, scale * (1 + delta))); if (oldScale === newScale) return; panX = mouseX - (mouseX - panX) * (newScale / oldScale); panY = mouseY - (mouseY - panY) * (newScale / oldScale); scale = newScale; applyViewTransform(); }
+        function resetView() { scale = 1.0; panX = 0; panY = 0; applyViewTransform(); }
+        function fitView() { if (!diagram || !devices || devices.length === 0) { resetView(); return; } let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity; devices.forEach(d => { minX = Math.min(minX, d.x); minY = Math.min(minY, d.y); maxX = Math.max(maxX, d.x + 160); maxY = Math.max(maxY, d.y + 120); }); const contentWidth = maxX - minX; const contentHeight = maxY - minY; const viewWidth = diagram.clientWidth; const viewHeight = diagram.clientHeight; const newScale = Math.min(viewWidth / contentWidth, viewHeight / contentHeight) * 0.9; scale = isNaN(newScale) || !isFinite(newScale) ? 1.0 : newScale; panX = (viewWidth - (contentWidth * scale)) / 2 - (minX * scale); panY = (viewHeight - (contentHeight * scale)) / 2 - (minY * scale); applyViewTransform(); }
+        function updateSelectionVisuals() { if (!canvas) return; canvas.querySelectorAll('.network-device').forEach(el => { el.classList.toggle('selected', selectedDeviceIds.includes(el.id)); el.classList.toggle('connection-start', connectionStartId === el.id); }); }
+        function editDevice(id) { const device = devices.find(d => d.id === id); if (!device) return; device.name = prompt('Nome:', device.name) || device.name; device.ip = prompt('IP:', device.ip) || device.ip; device.info = prompt('Descrição:', device.info) || device.info; const newPhotoUrl = prompt('URL da Imagem:', device.photoUrl); device.photoUrl = newPhotoUrl === null ? device.photoUrl : newPhotoUrl.trim(); const newWebsiteUrl = prompt('Link do Site:', device.websiteUrl); device.websiteUrl = newWebsiteUrl === null ? device.websiteUrl : newWebsiteUrl.trim(); if(device.isCustom){ device.customIcon = prompt("Ícone Personalizado:", device.customIcon) || device.customIcon; device.customColor = prompt("Cor Personalizada (hex):", device.customColor) || device.customColor; } saveState(); }
+        function deleteSelectedDevices() { if (selectedDeviceIds.length === 0) return; devices = devices.filter(d => !selectedDeviceIds.includes(d.id)); connections = connections.filter(c => !selectedDeviceIds.includes(c.from) && !selectedDeviceIds.includes(c.to)); selectedDeviceIds = []; saveState(); }
+        function startConnection(id) { connectionStartId = id; diagram.classList.add('connecting'); updateSelectionVisuals(); }
+        function finishConnection(endId) { if (connectionStartId && connectionStartId !== endId) { const exists = connections.some(c => (c.from === connectionStartId && c.to === endId) || (c.from === endId && c.to === connectionStartId)); if (!exists) { if(!connections) connections = []; connections.push({ from: connectionStartId, to: endId }); } } cancelConnectionMode(); saveState(); }
+        function cancelConnectionMode() { connectionStartId = null; if (diagram) diagram.classList.remove('connecting'); updateSelectionVisuals(); }
+        function addDeviceEvents(deviceEl) { deviceEl.addEventListener('mousedown', handleDeviceMouseDown); deviceEl.addEventListener('dblclick', (e) => { e.stopPropagation(); editDevice(e.currentTarget.id); }); }
+        function handleDiagramMouseDown(e) { if (isSpacebarDown || e.button === 1) { isPanning = true; diagram.classList.add('panning'); let lastX = e.clientX; let lastY = e.clientY; function onPanMove(e) { panX += e.clientX - lastX; panY += e.clientY - lastY; lastX = e.clientX; lastY = e.clientY; applyViewTransform(); } function onPanEnd() { isPanning = false; diagram.classList.remove('panning'); document.removeEventListener('mousemove', onPanMove); document.removeEventListener('mouseup', onPanEnd); } document.addEventListener('mousemove', onPanMove); document.addEventListener('mouseup', onPanEnd); } else if (e.target === canvas || e.target === diagram) { selectedDeviceIds = []; cancelConnectionMode(); updateSelectionVisuals(); } }
+        function handleDeviceMouseDown(e) { e.stopPropagation(); if (e.button !== 0) return; const deviceId = e.currentTarget.id; if (e.shiftKey) { connectionStartId ? finishConnection(deviceId) : startConnection(deviceId); return; } cancelConnectionMode(); if (e.ctrlKey || e.metaKey) { selectedDeviceIds.includes(deviceId) ? selectedDeviceIds = selectedDeviceIds.filter(id => id !== deviceId) : selectedDeviceIds.push(deviceId); } else if (!selectedDeviceIds.includes(deviceId)) { selectedDeviceIds = [deviceId]; } updateSelectionVisuals(); let dragOffsets = new Map(); selectedDeviceIds.forEach(id => { const d = devices.find(dev => dev.id === id); dragOffsets.set(id, { x: d.x, y: d.y }); }); const dragStartX = e.clientX; const dragStartY = e.clientY; function onDeviceDrag(e) { selectedDeviceIds.forEach(id => { const device = devices.find(d => d.id === id); const offset = dragOffsets.get(id); device.x = offset.x + (e.clientX - dragStartX) / scale; device.y = offset.y + (e.clientY - dragStartY) / scale; }); render(); } function onDeviceDragEnd() { document.removeEventListener('mousemove', onDeviceDrag); document.removeEventListener('mouseup', onDeviceDragEnd); saveState(); } document.addEventListener('mousemove', onDeviceDrag); document.addEventListener('mouseup', onDeviceDragEnd); }
+        
+        // **** ALTERAÇÃO AQUI: Configuração dos Event Listeners ****
+        document.addEventListener('DOMContentLoaded', () => {
+            // Carrega os dados do Firebase primeiro
+            loadState();
+            applyViewTransform();
+
+            // Configura todos os botões e eventos depois que o DOM está pronto
+            if(diagram) diagram.addEventListener('mousedown', handleDiagramMouseDown);
+            if(diagram) diagram.addEventListener('wheel', e => { e.preventDefault(); const rect = diagram.getBoundingClientRect(); zoom(-e.deltaY * 0.001, e.clientX - rect.left, e.clientY - rect.top); });
+            document.addEventListener('keydown', (e) => { if (e.code === 'Space' && !isSpacebarDown) { isSpacebarDown = true; if (!isPanning) diagram.classList.add('panning'); } if ((e.key === 'Delete' || e.key === 'Backspace') && document.activeElement.tagName !== 'INPUT') { deleteSelectedDevices(); } if (e.key === 'Escape') { selectedDeviceIds = []; cancelConnectionMode(); } });
+            document.addEventListener('keyup', (e) => { if (e.code === 'Space') { isSpacebarDown = false; if (!isPanning) diagram.classList.remove('panning'); } });
+            
+            document.getElementById('zoom-in').addEventListener('click', () => zoom(0.15, diagram.clientWidth / 2, diagram.clientHeight / 2));
+            document.getElementById('zoom-out').addEventListener('click', () => zoom(-0.15, diagram.clientWidth / 2, diagram.clientHeight / 2));
+            document.getElementById('zoom-reset').addEventListener('click', resetView);
+            document.getElementById('zoom-fit').addEventListener('click', fitView);
+            document.getElementById('btn-clear').addEventListener('click', () => { if (confirm('Limpar todo o diagrama? Isso afetará todos os usuários.')) { devices = []; connections = []; selectedDeviceIds = []; saveState(); } });
+            document.getElementById('btn-export').addEventListener('click', () => { const stateJson = JSON.stringify({ devices, connections }, null, 2); const blob = new Blob([stateJson], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `network-layout-${Date.now()}.json`; a.click(); URL.revokeObjectURL(url); });
+            
+            const importFileEl = document.getElementById('import-file');
+            document.getElementById('btn-import').addEventListener('click', () => importFileEl.click());
+            importFileEl.addEventListener('change', (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (event) => { try { const importedState = JSON.parse(event.target.result); if (Array.isArray(importedState.devices) && Array.isArray(importedState.connections)) { devices = importedState.devices; connections = importedState.connections; selectedDeviceIds = []; saveState(); fitView(); } else { alert('Erro: Arquivo JSON inválido.'); } } catch (error) { alert('Erro ao ler o arquivo: ' + error.message); } }; reader.readAsText(file); importFileEl.value = ''; });
+
+            // Listeners para adicionar dispositivos
+            document.getElementById('add-router').addEventListener('click', () => addDevice('router'));
+            document.getElementById('add-switch').addEventListener('click', () => addDevice('switch'));
+            document.getElementById('add-server').addEventListener('click', () => addDevice('server'));
+            document.getElementById('add-firewall').addEventListener('click', () => addDevice('firewall'));
+            document.getElementById('add-endpoint').addEventListener('click', () => addDevice('endpoint'));
+            document.getElementById('add-printer').addEventListener('click', () => addDevice('printer'));
+            document.getElementById('add-printer3d').addEventListener('click', () => addDevice('printer3d'));
+            document.getElementById('add-nvr').addEventListener('click', () => addDevice('nvr'));
+            document.getElementById('add-camera').addEventListener('click', () => addDevice('camera'));
+            document.getElementById('add-tv').addEventListener('click', () => addDevice('tv'));
+            document.getElementById('add-custom').addEventListener('click', () => addCustomDevice());
         });
-    }
-
-    function loadState() {
-        // onValue fica "escutando" por mudanças no banco de dados em tempo real
-        onValue(diagramStateRef, (snapshot) => {
-            const state = snapshot.val();
-            if (state && state.devices) {
-                devices = state.devices;
-                connections = state.connections || [];
-            } else {
-                // Se não houver nada no banco, inicia com um estado padrão
-                initializeDefaultState();
-                saveState(); // Salva o estado inicial no Firebase
-            }
-            render(); // Renderiza o diagrama com os dados recebidos
-        });
-    }
-
-    function initializeDefaultState() {
-        devices = [{ id: 'opnsense-main', type: 'opnsense', x: 2000, y: 1500, name: 'OPNsense', ip: '---', info: 'Firewall', photoUrl: '', websiteUrl: 'https://opnsense.org/', isCustom: false }];
-        connections = [];
-        fitView( );
-    }
-
-    // O resto das suas funções permanece praticamente igual
-    function applyViewTransform() { canvas.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`; document.getElementById('zoom-level').textContent = `${Math.round(scale * 100)}%`; }
-    function zoom(delta, mouseX, mouseY) { const oldScale = scale; const newScale = Math.max(0.2, Math.min(2, scale * (1 + delta))); if (oldScale === newScale) return; panX = mouseX - (mouseX - panX) * (newScale / oldScale); panY = mouseY - (mouseY - panY) * (newScale / oldScale); scale = newScale; applyViewTransform(); }
-    function resetView() { scale = 1.0; panX = 0; panY = 0; applyViewTransform(); }
-    function fitView() { if (devices.length === 0) { resetView(); return; } let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity; devices.forEach(d => { minX = Math.min(minX, d.x); minY = Math.min(minY, d.y); maxX = Math.max(maxX, d.x + 160); maxY = Math.max(maxY, d.y + 120); }); const contentWidth = maxX - minX; const contentHeight = maxY - minY; const viewWidth = diagram.clientWidth; const viewHeight = diagram.clientHeight; const newScale = Math.min(viewWidth / contentWidth, viewHeight / contentHeight) * 0.9; scale = isNaN(newScale) || !isFinite(newScale) ? 1.0 : newScale; panX = (viewWidth - (contentWidth * scale)) / 2 - (minX * scale); panY = (viewHeight - (contentHeight * scale)) / 2 - (minY * scale); applyViewTransform(); }
-    function updateSelectionVisuals() { canvas.querySelectorAll('.network-device').forEach(el => { el.classList.toggle('selected', selectedDeviceIds.includes(el.id)); el.classList.toggle('connection-start', connectionStartId === el.id); }); }
-    function editDevice(id) { const device = devices.find(d => d.id === id); if (!device) return; device.name = prompt('Nome:', device.name) || device.name; device.ip = prompt('IP:', device.ip) || device.ip; device.info = prompt('Descrição:', device.info) || device.info; const newPhotoUrl = prompt('URL da Imagem:', device.photoUrl); device.photoUrl = newPhotoUrl === null ? device.photoUrl : newPhotoUrl.trim(); const newWebsiteUrl = prompt('Link do Site:', device.websiteUrl); device.websiteUrl = newWebsiteUrl === null ? device.websiteUrl : newWebsiteUrl.trim(); if(device.isCustom){ device.customIcon = prompt("Ícone Personalizado:", device.customIcon) || device.customIcon; device.customColor = prompt("Cor Personalizada (hex):", device.customColor) || device.customColor; } saveState(); render(); }
-    function deleteSelectedDevices() { if (selectedDeviceIds.length === 0) return; devices = devices.filter(d => !selectedDeviceIds.includes(d.id)); connections = connections.filter(c => !selectedDeviceIds.includes(c.from) && !selectedDeviceIds.includes(c.to)); selectedDeviceIds = []; saveState(); render(); }
-    function startConnection(id) { connectionStartId = id; diagram.classList.add('connecting'); updateSelectionVisuals(); }
-    function finishConnection(endId) { if (connectionStartId && connectionStartId !== endId) { const exists = connections.some(c => (c.from === connectionStartId && c.to === endId) || (c.from === endId && c.to === connectionStartId)); if (!exists) { connections.push({ from: connectionStartId, to: endId }); } } cancelConnectionMode(); saveState(); render(); }
-    function cancelConnectionMode() { connectionStartId = null; diagram.classList.remove('connecting'); updateSelectionVisuals(); }
-    function addDeviceEvents(deviceEl) { deviceEl.addEventListener('mousedown', handleDeviceMouseDown); deviceEl.addEventListener('dblclick', (e) => { e.stopPropagation(); editDevice(e.currentTarget.id); }); }
-    function handleDiagramMouseDown(e) { if (isSpacebarDown || e.button === 1) { isPanning = true; diagram.classList.add('panning'); let lastX = e.clientX; let lastY = e.clientY; function onPanMove(e) { panX += e.clientX - lastX; panY += e.clientY - lastY; lastX = e.clientX; lastY = e.clientY; applyViewTransform(); } function onPanEnd() { isPanning = false; diagram.classList.remove('panning'); document.removeEventListener('mousemove', onPanMove); document.removeEventListener('mouseup', onPanEnd); } document.addEventListener('mousemove', onPanMove); document.addEventListener('mouseup', onPanEnd); } else if (e.target === canvas || e.target === diagram) { selectedDeviceIds = []; cancelConnectionMode(); updateSelectionVisuals(); } }
-    function handleDeviceMouseDown(e) { e.stopPropagation(); if (e.button !== 0) return; const deviceId = e.currentTarget.id; if (e.shiftKey) { connectionStartId ? finishConnection(deviceId) : startConnection(deviceId); return; } cancelConnectionMode(); if (e.ctrlKey || e.metaKey) { selectedDeviceIds.includes(deviceId) ? selectedDeviceIds = selectedDeviceIds.filter(id => id !== deviceId) : selectedDeviceIds.push(deviceId); } else if (!selectedDeviceIds.includes(deviceId)) { selectedDeviceIds = [deviceId]; } updateSelectionVisuals(); let dragOffsets = new Map(); selectedDeviceIds.forEach(id => { const d = devices.find(dev => dev.id === id); dragOffsets.set(id, { x: d.x, y: d.y }); }); const dragStartX = e.clientX; const dragStartY = e.clientY; function onDeviceDrag(e) { selectedDeviceIds.forEach(id => { const device = devices.find(d => d.id === id); const offset = dragOffsets.get(id); device.x = offset.x + (e.clientX - dragStartX) / scale; device.y = offset.y + (e.clientY - dragStartY) / scale; }); render(); } function onDeviceDragEnd() { document.removeEventListener('mousemove', onDeviceDrag); document.removeEventListener('mouseup', onDeviceDragEnd); saveState(); } document.addEventListener('mousemove', onDeviceDrag); document.addEventListener('mouseup', onDeviceDragEnd); }
-    
-    // Inicialização
-    document.addEventListener('DOMContentLoaded', () => {
-        loadState(); // A função loadState agora configura a escuta em tempo real
-        applyViewTransform();
-    });
-
-    // Event Listeners (sem alterações)
-    diagram.addEventListener('mousedown', handleDiagramMouseDown);
-    diagram.addEventListener('wheel', e => { e.preventDefault(); const rect = diagram.getBoundingClientRect(); zoom(-e.deltaY * 0.001, e.clientX - rect.left, e.clientY - rect.top); });
-    document.addEventListener('keydown', (e) => { if (e.code === 'Space' && !isSpacebarDown) { isSpacebarDown = true; if (!isPanning) diagram.classList.add('panning'); } if ((e.key === 'Delete' || e.key === 'Backspace') && document.activeElement.tagName !== 'INPUT') { deleteSelectedDevices(); } if (e.key === 'Escape') { selectedDeviceIds = []; cancelConnectionMode(); } });
-    document.addEventListener('keyup', (e) => { if (e.code === 'Space') { isSpacebarDown = false; if (!isPanning) diagram.classList.remove('panning'); } });
-    document.getElementById('zoom-in').addEventListener('click', () => zoom(0.15, diagram.clientWidth / 2, diagram.clientHeight / 2));
-    document.getElementById('zoom-out').addEventListener('click', () => zoom(-0.15, diagram.clientWidth / 2, diagram.clientHeight / 2));
-    document.getElementById('zoom-reset').addEventListener('click', resetView);
-    document.getElementById('zoom-fit').addEventListener('click', fitView);
-    document.getElementById('btn-clear').addEventListener('click', () => { if (confirm('Limpar todo o diagrama? Isso afetará todos os usuários.')) { devices = []; connections = []; selectedDeviceIds = []; saveState(); render(); } });
-    document.getElementById('btn-export').addEventListener('click', () => { const stateJson = JSON.stringify({ devices, connections }, null, 2); const blob = new Blob([stateJson], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `network-layout-${Date.now()}.json`; a.click(); URL.revokeObjectURL(url); });
-    const importFileEl = document.getElementById('import-file');
-    document.getElementById('btn-import').addEventListener('click', () => importFileEl.click());
-    importFileEl.addEventListener('change', (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (event) => { try { const importedState = JSON.parse(event.target.result); if (Array.isArray(importedState.devices) && Array.isArray(importedState.connections)) { devices = importedState.devices; connections = importedState.connections; selectedDeviceIds = []; saveState(); render(); fitView(); } else { alert('Erro: Arquivo JSON inválido.'); } } catch (error) { alert('Erro ao ler o arquivo: ' + error.message); } }; reader.readAsText(file); importFileEl.value = ''; });
-
-</script>
-
-</body>
-</html>
+    </script>
